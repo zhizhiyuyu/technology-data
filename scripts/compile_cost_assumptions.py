@@ -1171,6 +1171,84 @@ def add_co2_intensity(cost_dataframe: pd.DataFrame) -> pd.DataFrame:
 
     return cost_dataframe
 
+import numpy as np
+import pandas as pd
+
+def add_tidal_range_energy(years: list, cost_dataframe: pd.DataFrame) -> pd.DataFrame:
+    """
+    Add tidal range energy cost assumptions (e.g. lagoon or barrage) to the cost data.
+
+    Parameters
+    ----------
+    years : list
+        List of years for which the cost assumptions are needed.
+    cost_dataframe : pandas.DataFrame
+        DataFrame containing technology cost data with MultiIndex (technology, parameter).
+
+    Returns
+    -------
+    pandas.DataFrame
+        Updated cost DataFrame with tidal range technology entries.
+    """
+
+    # Interpolate investment cost (EUR/MW) from reference years
+    # Values can be modified based on reliable sources
+    interpolated_data = np.interp(
+        x=years,
+        xp=[2020, 2025, 2030, 2035, 2040, 2045, 2050],
+        fp=[4500, 3921, 3300, 2778, 2338, 1968, 1656]  # Capital cost in EUR/MW
+    )
+
+    # Convert to the configured EUR year using inflation adjustment
+    interpolated_data = interpolated_data / (
+        1 + snakemake.config["rate_inflation"]
+    ) ** (2020 - snakemake.config["eur_year"])
+
+    tidal_range_costs = pd.Series(data=interpolated_data, index=years)
+
+    # --- choose a single scenario year to write (keep your original structure) ---
+    # If snakemake has a wildcard year, use it; otherwise fall back to the last in 'years'
+    year = getattr(getattr(snakemake, "wildcards", object()), "year", None)
+    if year is None:
+        year = years[-1]
+    # ensure int
+    year = int(year)
+
+    # Add investment cost entry
+    cost_dataframe.loc[("tidal-range", "investment"), "value"] = tidal_range_costs.at[year]
+    cost_dataframe.loc[("tidal-range", "investment"), "unit"] = "EUR/MW"
+    cost_dataframe.loc[("tidal-range", "investment"), "source"] = "User estimate"
+    cost_dataframe.loc[("tidal-range", "investment"), "currency_year"] = 2020
+
+    # Add lifetime assumption (e.g. 100 years for tidal barrage infrastructure)
+    cost_dataframe.loc[("tidal-range", "lifetime"), "value"] = 100
+    cost_dataframe.loc[("tidal-range", "lifetime"), "unit"] = "years"
+    cost_dataframe.loc[("tidal-range", "lifetime"), "source"] = "User estimate"
+    cost_dataframe.loc[("tidal-range", "lifetime"), "currency_year"] = 2020
+
+
+
+    # Add investment cost for tidal-range underground connection
+    # (use onshore AC analogy; for tidal range usually no submarine export)
+    cost_dataframe.loc[("tidal-range-connection-underground", "investment"), "value"] = 1420
+    cost_dataframe.loc[("tidal-range-connection-underground", "investment"), "unit"] = "EUR/MW/km"
+    cost_dataframe.loc[("tidal-range-connection-underground", "investment"), "source"] = "Estimated based on onshore AC underground"
+    cost_dataframe.loc[("tidal-range-connection-underground", "investment"), "currency_year"] = 2020
+
+    # station 
+    cost_dataframe.loc[("tidal-range-station", "investment"), "value"] = 265
+    cost_dataframe.loc[("tidal-range-station", "investment"), "unit"] = "EUR/kWel"
+    cost_dataframe.loc[("tidal-range-station", "investment"), "source"] = "Analogy to hydro substations"
+    cost_dataframe.loc[("tidal-range-station", "investment"), "currency_year"] = 2020
+
+    # submarine
+    cost_dataframe.loc[("tidal-range-connection-submarine", "investment"), "value"] = 2841
+    cost_dataframe.loc[("tidal-range-connection-submarine", "investment"), "unit"] = "EUR/MW/km"
+    cost_dataframe.loc[("tidal-range-connection-submarine", "investment"), "source"] = "Tidal range nearshore: negligible submarine"
+    cost_dataframe.loc[("tidal-range-connection-submarine", "investment"), "currency_year"] = 2020
+
+    return cost_dataframe
+
 
 def add_solar_from_other(years: list, cost_dataframe: pd.DataFrame) -> pd.DataFrame:
     """
@@ -4135,6 +4213,8 @@ if __name__ == "__main__":
         ):
             costs = add_solar_from_other(years_list, costs)
 
+        # add tidal and wave data
+        costs = add_tidal_range_energy(years_list, costs)
         # add desalination and clean water tank storage
         costs = add_desalination_data(costs)
         # add energy storage database
