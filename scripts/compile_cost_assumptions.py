@@ -1215,37 +1215,37 @@ def add_tidal_range_energy(years: list, cost_dataframe: pd.DataFrame) -> pd.Data
     year = int(year)
 
     # Add investment cost entry
-    cost_dataframe.loc[("tidal-range", "investment"), "value"] = tidal_range_costs.at[year]
-    cost_dataframe.loc[("tidal-range", "investment"), "unit"] = "EUR/MW"
-    cost_dataframe.loc[("tidal-range", "investment"), "source"] = "User estimate"
-    cost_dataframe.loc[("tidal-range", "investment"), "currency_year"] = 2020
+    cost_dataframe.loc[("tidalRange", "investment"), "value"] = tidal_range_costs.at[year]
+    cost_dataframe.loc[("tidalRange", "investment"), "unit"] = "EUR/MW"
+    cost_dataframe.loc[("tidalRange", "investment"), "source"] = "User estimate"
+    cost_dataframe.loc[("tidalRange", "investment"), "currency_year"] = 2020
 
     # Add lifetime assumption (e.g. 100 years for tidal barrage infrastructure)
-    cost_dataframe.loc[("tidal-range", "lifetime"), "value"] = 100
-    cost_dataframe.loc[("tidal-range", "lifetime"), "unit"] = "years"
-    cost_dataframe.loc[("tidal-range", "lifetime"), "source"] = "User estimate"
-    cost_dataframe.loc[("tidal-range", "lifetime"), "currency_year"] = 2020
+    cost_dataframe.loc[("tidalRange", "lifetime"), "value"] = 100
+    cost_dataframe.loc[("tidalRange", "lifetime"), "unit"] = "years"
+    cost_dataframe.loc[("tidalRange", "lifetime"), "source"] = "User estimate"
+    cost_dataframe.loc[("tidalRange", "lifetime"), "currency_year"] = 2020
 
 
 
-    # Add investment cost for tidal-range underground connection
+    # Add investment cost for tidalRange underground connection
     # (use onshore AC analogy; for tidal range usually no submarine export)
-    cost_dataframe.loc[("tidal-range-connection-underground", "investment"), "value"] = 1420
-    cost_dataframe.loc[("tidal-range-connection-underground", "investment"), "unit"] = "EUR/MW/km"
-    cost_dataframe.loc[("tidal-range-connection-underground", "investment"), "source"] = "Estimated based on onshore AC underground"
-    cost_dataframe.loc[("tidal-range-connection-underground", "investment"), "currency_year"] = 2020
+    cost_dataframe.loc[("tidalRange-connection-underground", "investment"), "value"] = 1420
+    cost_dataframe.loc[("tidalRange-connection-underground", "investment"), "unit"] = "EUR/MW/km"
+    cost_dataframe.loc[("tidalRange-connection-underground", "investment"), "source"] = "Estimated based on onshore AC underground"
+    cost_dataframe.loc[("tidalRange-connection-underground", "investment"), "currency_year"] = 2020
 
     # station 
-    cost_dataframe.loc[("tidal-range-station", "investment"), "value"] = 265
-    cost_dataframe.loc[("tidal-range-station", "investment"), "unit"] = "EUR/kWel"
-    cost_dataframe.loc[("tidal-range-station", "investment"), "source"] = "Analogy to hydro substations"
-    cost_dataframe.loc[("tidal-range-station", "investment"), "currency_year"] = 2020
+    cost_dataframe.loc[("tidalRange-station", "investment"), "value"] = 265
+    cost_dataframe.loc[("tidalRange-station", "investment"), "unit"] = "EUR/kWel"
+    cost_dataframe.loc[("tidalRange-station", "investment"), "source"] = "Analogy to hydro substations"
+    cost_dataframe.loc[("tidalRange-station", "investment"), "currency_year"] = 2020
 
     # submarine
-    cost_dataframe.loc[("tidal-range-connection-submarine", "investment"), "value"] = 2841
-    cost_dataframe.loc[("tidal-range-connection-submarine", "investment"), "unit"] = "EUR/MW/km"
-    cost_dataframe.loc[("tidal-range-connection-submarine", "investment"), "source"] = "Tidal range nearshore: negligible submarine"
-    cost_dataframe.loc[("tidal-range-connection-submarine", "investment"), "currency_year"] = 2020
+    cost_dataframe.loc[("tidalRange-connection-submarine", "investment"), "value"] = 2841
+    cost_dataframe.loc[("tidalRange-connection-submarine", "investment"), "unit"] = "EUR/MW/km"
+    cost_dataframe.loc[("tidalRange-connection-submarine", "investment"), "source"] = "Tidal range nearshore: negligible submarine"
+    cost_dataframe.loc[("tidalRange-connection-submarine", "investment"), "currency_year"] = 2020
 
     return cost_dataframe
 
