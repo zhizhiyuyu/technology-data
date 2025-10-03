@@ -1216,12 +1216,12 @@ def add_tidal_range_energy(years: list, cost_dataframe: pd.DataFrame) -> pd.Data
 
     # Add investment cost entry
     cost_dataframe.loc[("tidalRange", "investment"), "value"] = tidal_range_costs.at[year]
-    cost_dataframe.loc[("tidalRange", "investment"), "unit"] = "EUR/MW"
+    cost_dataframe.loc[("tidalRange", "investment"), "unit"] = "EUR/kW"
     cost_dataframe.loc[("tidalRange", "investment"), "source"] = "User estimate"
     cost_dataframe.loc[("tidalRange", "investment"), "currency_year"] = 2020
 
     # Add lifetime assumption (e.g. 100 years for tidal barrage infrastructure)
-    cost_dataframe.loc[("tidalRange", "lifetime"), "value"] = 100
+    cost_dataframe.loc[("tidalRange", "lifetime"), "value"] = 120
     cost_dataframe.loc[("tidalRange", "lifetime"), "unit"] = "years"
     cost_dataframe.loc[("tidalRange", "lifetime"), "source"] = "User estimate"
     cost_dataframe.loc[("tidalRange", "lifetime"), "currency_year"] = 2020
@@ -1232,18 +1232,24 @@ def add_tidal_range_energy(years: list, cost_dataframe: pd.DataFrame) -> pd.Data
     # (use onshore AC analogy; for tidal range usually no submarine export)
     cost_dataframe.loc[("tidalRange-connection-underground", "investment"), "value"] = 1420
     cost_dataframe.loc[("tidalRange-connection-underground", "investment"), "unit"] = "EUR/MW/km"
+    cost_dataframe.loc[("tidalRange-connection-underground", "lifetime"), "value"] = 120
+    cost_dataframe.loc[("tidalRange-connection-underground", "lifetime"), "unit"] = "years"
     cost_dataframe.loc[("tidalRange-connection-underground", "investment"), "source"] = "Estimated based on onshore AC underground"
     cost_dataframe.loc[("tidalRange-connection-underground", "investment"), "currency_year"] = 2020
 
     # station 
     cost_dataframe.loc[("tidalRange-station", "investment"), "value"] = 265
     cost_dataframe.loc[("tidalRange-station", "investment"), "unit"] = "EUR/kWel"
+    cost_dataframe.loc[("tidalRange-station", "lifetime"), "value"] = 120
+    cost_dataframe.loc[("tidalRange-station", "lifetime"), "unit"] = "years"
     cost_dataframe.loc[("tidalRange-station", "investment"), "source"] = "Analogy to hydro substations"
     cost_dataframe.loc[("tidalRange-station", "investment"), "currency_year"] = 2020
 
     # submarine
     cost_dataframe.loc[("tidalRange-connection-submarine", "investment"), "value"] = 2841
     cost_dataframe.loc[("tidalRange-connection-submarine", "investment"), "unit"] = "EUR/MW/km"
+    cost_dataframe.loc[("tidalRange-connection-submarine", "lifetime"), "value"] = 120
+    cost_dataframe.loc[("tidalRange-connection-submarine", "lifetime"), "unit"] = "years"
     cost_dataframe.loc[("tidalRange-connection-submarine", "investment"), "source"] = "Tidal range nearshore: negligible submarine"
     cost_dataframe.loc[("tidalRange-connection-submarine", "investment"), "currency_year"] = 2020
 
